@@ -6,7 +6,6 @@ import {
   categoryCloudAnchors,
   flowCloudSlots,
   flowKeywordByKey,
-  FLOW_VISUAL_ORDER,
   getOrderedFlows,
 } from "@/content/sections/flujos-map-layout";
 
@@ -35,38 +34,12 @@ export function FlowCircuitMap({ flows, activeFlowKey, onSelectFlow }: FlowCircu
   const orderedFlows = getOrderedFlows(flows);
   const shouldReduceMotion = useReducedMotion();
 
-  const byKey = new Map(orderedFlows.map((flow) => [flow.key, flow]));
-
   return (
     <div className="relative h-[390px] overflow-hidden rounded-2xl border border-black/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,251,231,0.74))] p-4 md:h-[470px]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(200,238,3,0.22),transparent_36%),radial-gradient(circle_at_84%_20%,rgba(2,2,2,0.09),transparent_36%)]" />
       <div className="pointer-events-none absolute left-4 top-3 rounded-full border border-black/12 bg-white/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-black/62">
         Mapa no secuencial de intenciones
       </div>
-
-      <svg className="pointer-events-none absolute inset-0" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        {FLOW_VISUAL_ORDER.map((key) => {
-          const flow = byKey.get(key);
-          if (!flow) return null;
-
-          const node = flowCloudSlots[key];
-          const hub = categoryCloudAnchors[flow.category];
-          const active = flow.key === activeFlowKey;
-          const stroke = active ? "rgba(200,238,3,0.95)" : "rgba(2,2,2,0.16)";
-          const path = `M ${hub.x} ${hub.y} Q ${(hub.x + node.x) / 2} ${(hub.y + node.y) / 2 - 6} ${node.x} ${node.y}`;
-
-          return (
-            <path
-              key={`edge-${key}`}
-              d={path}
-              fill="none"
-              stroke={stroke}
-              strokeWidth={active ? 0.42 : 0.28}
-              strokeDasharray={active ? "0" : "1.1 1.1"}
-            />
-          );
-        })}
-      </svg>
 
       {Object.entries(categoryCloudAnchors).map(([category, anchor]) => (
         <div

@@ -7,20 +7,17 @@ import {
   Bot,
   Check,
   CheckCircle2,
-  ChevronDown,
   Clock3,
   Handshake,
   MoonStar,
-  Route,
   Siren,
   UserRound,
   X,
   XCircle,
 } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ContentCard } from "@/components/shared/ContentCard";
 import { Eyebrow } from "@/components/shared/Eyebrow";
-import { NumberBadge } from "@/components/shared/NumberBadge";
 import { Tag } from "@/components/shared/Tag";
 import HeroShutterText from "@/components/ui/hero-shutter-text";
 import { scopeDetail } from "@/content/sections/scope-detail";
@@ -49,12 +46,7 @@ function matchesOwnerFilter(owner: string, filter: EscalationFilter) {
 }
 
 export function ScopeSectionPage() {
-  const [activeIntentId, setActiveIntentId] = useState(scopeDetail.intentMap[0]?.id ?? 1);
   const [escalationFilter, setEscalationFilter] = useState<EscalationFilter>("luisa");
-
-  const activeIntent =
-    scopeDetail.intentMap.find((item) => item.id === activeIntentId) ??
-    scopeDetail.intentMap[0];
 
   const escalationRows = useMemo(
     () =>
@@ -304,94 +296,6 @@ export function ScopeSectionPage() {
                   </span>
                 </div>
               </div>
-            </div>
-          </ContentCard>
-        </section>
-
-        <section className="grid gap-6">
-          <ContentCard className="p-5 md:p-6">
-            <div className="mb-4 flex items-center gap-2">
-              <Route className="h-4 w-4 text-black" />
-              <div>
-                <Eyebrow>Mapa De Intenciones</Eyebrow>
-                <h2 className="mt-1 font-display text-4xl leading-[0.92] text-black">
-                  Señales típicas y flujo asignado
-                </h2>
-              </div>
-            </div>
-            <div className="grid gap-3">
-              {scopeDetail.intentMap.map((row) => {
-                const isActive = row.id === activeIntent.id;
-                return (
-                  <div
-                    key={row.id}
-                    className={`rounded-2xl border p-3 text-left transition ${
-                      isActive
-                        ? "border-[rgba(200,238,3,0.6)] bg-[linear-gradient(135deg,rgba(200,238,3,0.18),rgba(255,255,255,0.95))] text-black shadow-[0_10px_24px_rgba(2,2,2,0.08)]"
-                        : "border-black/10 bg-white/82 text-black hover:border-black/25"
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setActiveIntentId(row.id)}
-                      className="flex w-full items-start justify-between gap-2 text-left"
-                      aria-expanded={isActive}
-                    >
-                      <div className="mb-2 flex items-center gap-2">
-                        <NumberBadge value={row.id} size="sm" />
-                        <div>
-                          <p className="text-sm font-semibold">
-                            {row.assignedFlow.replace("Flujo ", "F").replace(": ", " · ")}
-                          </p>
-                        </div>
-                      </div>
-                      <ChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          isActive ? "rotate-180 text-[#7fa113]" : "text-black/60"
-                        }`}
-                      />
-                    </button>
-
-                    <AnimatePresence initial={false}>
-                      {isActive && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2, ease: "easeInOut" }}
-                          className="overflow-hidden"
-                        >
-                          <div className="mt-2 space-y-2 border-t border-black/10 pt-3">
-                            <div className="rounded-xl border border-black/12 bg-white/80 p-3">
-                              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/58">
-                                Flujo asignado
-                              </p>
-                              <p className="mt-1 text-sm font-semibold text-black">
-                                {row.assignedFlow}
-                              </p>
-                            </div>
-                            <div className="rounded-xl border border-black/12 bg-white/80 p-3">
-                              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-black/58">
-                                Señales detectadas
-                              </p>
-                              <div className="mt-2 flex flex-wrap gap-2">
-                                {row.signals.map((signal) => (
-                                  <span
-                                    key={signal}
-                                    className="inline-flex rounded-full border border-black/12 bg-white px-3 py-1 text-sm text-black/80"
-                                  >
-                                    “{signal}”
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
             </div>
           </ContentCard>
         </section>
