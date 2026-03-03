@@ -3,9 +3,7 @@ import { BrainCircuit } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { FlowDefinition, FlowKey } from "@/lib/types";
 import {
-  categoryCloudAnchors,
   flowCloudSlots,
-  flowKeywordByKey,
   getOrderedFlows,
 } from "@/content/sections/flujos-map-layout";
 
@@ -37,19 +35,25 @@ export function FlowCircuitMap({ flows, activeFlowKey, onSelectFlow }: FlowCircu
   return (
     <div className="relative h-[390px] overflow-hidden rounded-2xl border border-black/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,251,231,0.74))] p-4 md:h-[470px]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(200,238,3,0.22),transparent_36%),radial-gradient(circle_at_84%_20%,rgba(2,2,2,0.09),transparent_36%)]" />
+      {!shouldReduceMotion && (
+        <>
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-8 top-10 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(200,238,3,0.22),transparent_70%)] blur-xl"
+            animate={{ x: [0, 36, 0], y: [0, -12, 0] }}
+            transition={{ duration: 11, ease: "easeInOut", repeat: Number.POSITIVE_INFINITY }}
+          />
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-8 bottom-8 h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(2,2,2,0.12),transparent_72%)] blur-xl"
+            animate={{ x: [0, -30, 0], y: [0, 10, 0] }}
+            transition={{ duration: 13, ease: "easeInOut", repeat: Number.POSITIVE_INFINITY }}
+          />
+        </>
+      )}
       <div className="pointer-events-none absolute left-4 top-3 rounded-full border border-black/12 bg-white/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-black/62">
         Mapa no secuencial de intenciones
       </div>
-
-      {Object.entries(categoryCloudAnchors).map(([category, anchor]) => (
-        <div
-          key={category}
-          className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-black/12 bg-white/84 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-black/62"
-          style={{ left: `${anchor.x}%`, top: `${anchor.y}%` }}
-        >
-          {categoryLabel(category as FlowDefinition["category"])}
-        </div>
-      ))}
 
       {orderedFlows.map((flow) => {
         const slot = flowCloudSlots[flow.key];
@@ -62,7 +66,7 @@ export function FlowCircuitMap({ flows, activeFlowKey, onSelectFlow }: FlowCircu
             onClick={() => onSelectFlow(flow.key)}
             aria-current={active ? "true" : undefined}
             className={cn(
-              "absolute -translate-x-1/2 -translate-y-1/2 rounded-2xl border px-3 py-2 text-left",
+              "absolute -translate-x-1/2 -translate-y-1/2 rounded-2xl border px-3 py-2 text-left overflow-hidden",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(200,238,3,0.7)]",
               active ? "z-[3] border-black bg-black text-[#c8ee03] shadow-[0_10px_26px_rgba(2,2,2,0.28)]" : "z-[2] border-black/12 bg-white/92 text-black hover:border-black/30",
             )}
@@ -85,6 +89,14 @@ export function FlowCircuitMap({ flows, activeFlowKey, onSelectFlow }: FlowCircu
                   }
             }
           >
+            {active && !shouldReduceMotion && (
+              <motion.span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-2xl border border-[rgba(200,238,3,0.55)]"
+                animate={{ opacity: [0.28, 0.62, 0.28], scale: [1, 1.015, 1] }}
+                transition={{ duration: 2.1, ease: "easeInOut", repeat: Number.POSITIVE_INFINITY }}
+              />
+            )}
             <div className="flex items-center justify-between gap-2">
               <span
                 className={cn(
@@ -106,43 +118,6 @@ export function FlowCircuitMap({ flows, activeFlowKey, onSelectFlow }: FlowCircu
 
             <p className={cn("mt-2 text-[15px] leading-5", active ? "text-[#e9fca0]" : "text-black/78")}>{flow.shortTitle}</p>
           </motion.button>
-        );
-      })}
-
-      {orderedFlows.map((flow) => {
-        const slot = flowCloudSlots[flow.key];
-        const active = flow.key === activeFlowKey;
-        return (
-          <motion.div
-            key={`kw-${flow.key}`}
-            className={cn(
-              "pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em]",
-              active
-                ? "border-[rgba(200,238,3,0.55)] bg-[rgba(200,238,3,0.16)] text-black"
-                : "border-black/10 bg-white/75 text-black/55",
-            )}
-            style={{ left: `${slot.x - 2}%`, top: `${slot.y - 11}%` }}
-            initial={false}
-            animate={
-              shouldReduceMotion
-                ? undefined
-                : {
-                    opacity: [0.3, 0.9, 0.3],
-                    y: [0, -5, 0],
-                  }
-            }
-            transition={
-              shouldReduceMotion
-                ? undefined
-                : {
-                    duration: 7 + (slot.drift % 4),
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }
-            }
-          >
-            {flowKeywordByKey[flow.key]}
-          </motion.div>
         );
       })}
 
