@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+:root {
+  --color-paper: #fefdfe;
+  --color-paperAlt: #fbffd9;
+  --color-court: #020202;
+  --color-courtSoft: #171717;
+  --color-ink: #020202;
+  --color-clay: #c8ee03;
+  --color-accent: #c8ee03;
+  --color-line: rgba(2, 2, 2, 0.18);
+  --color-muted: rgba(2, 2, 2, 0.74);
+  --shadow-card: 0 16px 34px rgba(2, 2, 2, 0.12);
+  --shadow-glow: 0 0 0 1px rgba(200, 238, 3, 0.45), 0 14px 42px rgba(2, 2, 2, 0.22);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 14% 14%, rgba(200, 238, 3, 0.12), transparent 38%),
+    radial-gradient(circle at 85% 22%, rgba(2, 2, 2, 0.1), transparent 42%),
+    linear-gradient(180deg, #fbfbfb 0%, #f7f7f4 52%, #edf2cd 100%);
+  color: var(--color-ink);
+  font-family: var(--font-sans), sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+.page-grid {
+  background-image:
+    linear-gradient(to right, rgba(2, 2, 2, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(2, 2, 2, 0.045) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(180deg, black, rgba(0, 0, 0, 0.4));
+}
+
+.hero-glow {
+  background:
+    radial-gradient(circle at 28% 20%, rgba(200, 238, 3, 0.12), transparent 48%),
+    radial-gradient(circle at 76% 16%, rgba(2, 2, 2, 0.14), transparent 40%);
+}
+
+.reveal {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    animation: revealUp 540ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  .shutter-index-item {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: shutterItemIn 560ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: var(--shutter-delay, 0ms);
+  }
+
+  .shutter-index-item::before,
+  .shutter-index-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(180deg, rgba(254, 253, 254, 0.96), rgba(248, 250, 238, 0.96));
+    animation-duration: 720ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-fill-mode: forwards;
+    animation-delay: calc(var(--shutter-delay, 0ms) + 40ms);
+  }
+
+  .shutter-index-item::before {
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+    animation-name: shutterTopOpen;
+  }
+
+  .shutter-index-item::after {
+    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+    animation-name: shutterBottomOpen;
+  }
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shutterItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shutterTopOpen {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-110%);
+    opacity: 0;
+  }
+}
+
+@keyframes shutterBottomOpen {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+::selection {
+  background: rgba(200, 238, 3, 0.5);
+  color: #020202;
+}
+
+a,
+button {
+  transition-property: color, background-color, border-color, transform, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}

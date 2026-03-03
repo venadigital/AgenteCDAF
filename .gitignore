@@ -1,0 +1,19 @@
+# dependencies
+/node_modules
+.npm-cache
+
+# next.js
+/.next
+/out
+
+# misc
+.DS_Store
+*.log
+.dev.pid
+*.docx
+
+# env
+.env*
+
+# typescript
+*.tsbuildinfo
